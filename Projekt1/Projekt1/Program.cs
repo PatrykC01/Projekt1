@@ -1,4 +1,6 @@
 ﻿
+using HtmlAgilityPack;
+
 namespace Projekt1
 {
     class Produkt
@@ -15,6 +17,13 @@ namespace Projekt1
            List<string> linkiDoProduktow = PobierzLinkiDoProduktow("https://www.ceneo.pl/Komputery");
 
             Console.WriteLine("Znaleziono: " + linkiDoProduktow.Count + "produktow");
+        }
+
+        static HtmlDocument PobierzDokument(string url)
+        {
+            HtmlWeb web = new HtmlWeb();
+            HtmlDocument doc = web.Load(url);
+            return doc;
         }
     }
 
