@@ -12,7 +12,9 @@ namespace Projekt1
 
         static void Main(string[] args)
         {
-           
+           List<string> linkiDoProduktow = PobierzLinkiDoProduktow("https://www.ceneo.pl/Komputery");
+
+            Console.WriteLine("Znaleziono: " + linkiDoProduktow.Count + "produktow");
         }
     }
 
