@@ -25,6 +25,22 @@ namespace Projekt1
             HtmlDocument doc = web.Load(url);
             return doc;
         }
+
+        static List<string> PobierzLinkiDoProduktow(string url)
+        {
+            List<string> linkiDoProduktow = new List<string>();
+            HtmlDocument doc = PobierzDokument(url);
+            HtmlNodeCollection linkNodes = doc.DocumentNode.SelectNodes();//uzupełnić ścieżke
+            Uri baseUri = new Uri(url);
+
+            foreach (HtmlNode link in linkNodes)
+            {
+                string href = link.Attributes[name: "href"].Value;
+                linkiDoProduktow.Add(new Uri(baseUri, href).AbsoluteUri);
+            }
+
+            return linkiDoProduktow;
+        }
     }
 
 }
