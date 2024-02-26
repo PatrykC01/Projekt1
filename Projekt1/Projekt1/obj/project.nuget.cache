@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "MOT3rLpG4XKYxw9fbyIVxXwQA1MeDhRVBBEH1g2Zc/bCz0dlkbvZtMTf1s8NKow3H8zf8u5i7KpJSsXqaSOTgA==",
+  "dgSpecHash": "RL1OeApJHCFrswErIzFRn8DILRxcc7CPcXBxJ9juLibbK95TuivPveEA948gQ2mkgcmYl6lD0bl8/dB6kBnYWw==",
   "success": true,
   "projectFilePath": "C:\\Users\\20pat\\OneDrive\\Pulpit\\Szkoła\\P-zpp\\Projekt1\\Projekt1\\Projekt1\\Projekt1.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\20pat\\.nuget\\packages\\htmlagilitypack\\1.11.59\\htmlagilitypack.1.11.59.nupkg.sha512"
+  ],
   "logs": []
 }
