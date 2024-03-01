@@ -30,7 +30,7 @@ namespace Projekt1
         {
             List<string> linkiDoProduktow = new List<string>();
             HtmlDocument doc = PobierzDokument(url);
-            HtmlNodeCollection linkNodes = doc.DocumentNode.SelectNodes();//uzupełnić ścieżke
+            HtmlNodeCollection linkNodes = doc.DocumentNode.SelectNodes("//div[@class='cat-prod-row js_category-list-item js_clickHashData js_man-track-event']");//uzupełnić ścieżke
             Uri baseUri = new Uri(url);
 
             foreach (HtmlNode link in linkNodes)
