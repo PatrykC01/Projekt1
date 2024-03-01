@@ -6,7 +6,7 @@ namespace Projekt1
     class Produkt
     {
         public string Nazwa { get; set; }
-        public double Cena { get; set; }
+        public float Cena { get; set; }
         public string Obrazek { get; set; }
     }
     class Program
@@ -17,8 +17,27 @@ namespace Projekt1
            List<string> linkiDoProduktow = PobierzLinkiDoProduktow("https://www.ceneo.pl/Komputery");
 
             Console.WriteLine("Znaleziono: " + linkiDoProduktow.Count + "produktow");
+            List<Produkt> produkty = PobierzSzczegolyProdutkow(linkiDoProduktow);
         }
 
+        static List<Produkt> PobierzSzczegolyProdutkow(List<string> urls)
+        {
+            List<Produkt> produkty = new List<Produkt>();
+            foreach (string url in urls)
+            {
+                HtmlDocument document = PobierzDokument(url);
+                var titleXPath = "";
+                var priceXPath = "";
+                var imgUrlXPath = "";
+                Produkt produkt= new Produkt();
+                produkt.Nazwa = document.DocumentNode.SelectSingleNode(titleXPath).InnerText;
+                produkt.Obrazek = document.DocumentNode.SelectSingleNode(imgUrlXPath).InnerText;
+                produkt.Cena = float.Parse(document.DocumentNode.SelectSingleNode(priceXPath).InnerText);
+                produkty.Add(produkt);
+            }
+
+            return produkty;
+        }
         static HtmlDocument PobierzDokument(string url)
         {
             HtmlWeb web = new HtmlWeb();
