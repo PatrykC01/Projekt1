@@ -69,7 +69,7 @@ namespace Projekt1
         {
             List<string> linkiDoProduktow = new List<string>();
             HtmlDocument doc = PobierzDokument(url);
-            HtmlNodeCollection linkNodes = doc.DocumentNode.SelectNodes("//*[@id=\"body\"]/div/div/div[3]/div/section/div[4]/div[2]/div/div[1]/a");//uzupełnić ścieżke
+            HtmlNodeCollection linkNodes = doc.DocumentNode.SelectNodes("//div[@class='category-list-body js_category-list-body js_search-results js_products-list-main js_async-container']//div[@class='cat-prod-row__body ']/div[@class='cat-prod-row__foto']/a");//uzupełnić ścieżke
             Uri baseUri = new Uri(url);
 
             foreach (HtmlNode link in linkNodes)
