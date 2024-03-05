@@ -1,6 +1,7 @@
 ﻿
 using HtmlAgilityPack;
 using System.Globalization;
+using System.Reflection.Metadata;
 
 namespace Projekt1
 {
@@ -15,10 +16,7 @@ namespace Projekt1
 
         static void Main(string[] args)
         {
-           List<string> linkiDoProduktow = PobierzLinkiDoProduktow("https://www.ceneo.pl/Komputery");
-
-            Console.WriteLine("Znaleziono: " + linkiDoProduktow.Count + " produktow");
-            List<Produkt> produkty = PobierzSzczegolyProdutkow(linkiDoProduktow);
+            List<Produkt> produkty = PobierzSzczegolyProdutkow("https://www.ceneo.pl/Komputery");
             Export(produkty);
         }
 
@@ -33,31 +31,32 @@ namespace Projekt1
             }
         }
 
-        static List<Produkt> PobierzSzczegolyProdutkow(List<string> urls)
+        /*static List<Produkt> PobierzSzczegolyProdutkow(List<string> urls)
         {
             List<Produkt> produkty = new List<Produkt>();
             foreach (string url in urls)
             {
                 HtmlDocument document = PobierzDokument(url);
-                var titleXPath = "//*[@id=\"body\"]/div[2]/div/div/article/div/div[1]/div[2]/div[1]/div[1]/h1";
-                var zlpriceXPath = "//*[@id=\"body\"]/div[2]/div/div/article/div/div[2]/div/div/div[1]/span/span/span[1]";
+                var titleXPath = "//div[@class='product-top__title']/h1";
+                *//*var zlpriceXPath = "//*[@id=\"body\"]/div[2]/div/div/article/div/div[2]/div/div/div[1]/span/span/span[1]";
                 var grpriceXPath = "//*[@id=\"body\"]/div[2]/div/div/article/div/div[2]/div/div/div[1]/span/span/span[2]";
-                var imgUrlXPath = "//*[@id=\"product-carousel\"]/div/div[1]/div[1]/a/img";
+                var imgUrlXPath = "//*[@id=\"product-carousel\"]/div/div[1]/div[1]/a/img";*//*
 
                 Produkt produkt= new Produkt();
                 produkt.Nazwa = document.DocumentNode.SelectSingleNode(titleXPath).InnerText;
-                /*var ObrazekLink = document.DocumentNode.SelectSingleNode(imgUrlXPath);
+                Console.WriteLine(document.DocumentNode.SelectSingleNode(titleXPath).InnerText);
+                *//*var ObrazekLink = document.DocumentNode.SelectSingleNode(imgUrlXPath);
 
                 string href = ObrazekLink.Attributes[name: "href"].Value;*/
 
                 /*produkt.Obrazek = href; */
-                var fullPrice = float.Parse ((document.DocumentNode.SelectSingleNode(zlpriceXPath).InnerText) + (document.DocumentNode.SelectSingleNode(grpriceXPath).InnerText));
-                produkt.Cena = fullPrice;
+                /*var fullPrice = float.Parse ((document.DocumentNode.SelectSingleNode(zlpriceXPath).InnerText) + (document.DocumentNode.SelectSingleNode(grpriceXPath).InnerText));
+                produkt.Cena = fullPrice;*//*
                 produkty.Add(produkt);
             }
 
             return produkty;
-        }
+        }*/
         static HtmlDocument PobierzDokument(string url)
         {
             HtmlWeb web = new HtmlWeb();
@@ -65,20 +64,43 @@ namespace Projekt1
             return doc;
         }
 
-        static List<string> PobierzLinkiDoProduktow(string url)
+        static List<Produkt> PobierzSzczegolyProdutkow(string url)
         {
-            List<string> linkiDoProduktow = new List<string>();
+            List<Produkt> produkty = new List<Produkt>();
             HtmlDocument doc = PobierzDokument(url);
-            HtmlNodeCollection linkNodes = doc.DocumentNode.SelectNodes("//div[@class='category-list-body js_category-list-body js_search-results js_products-list-main js_async-container']//div[@class='cat-prod-row__body ']/div[@class='cat-prod-row__foto']/a");//uzupełnić ścieżke
+            HtmlNodeCollection productNodes = doc.DocumentNode.SelectNodes("//div[contains(@class, \"category-list-body\")]//div[contains(@class, \"cat-prod-row js_category-list-item\")]");
+
+            HtmlNodeCollection imgNodes = doc.DocumentNode.SelectNodes("//div[contains(@class, \"category-list-body\")]//div[contains(@class, \"cat-prod-row js_category-list-item\")]//a[contains(@class, \"js_clickHash js_seoUrl product-link go-to-product\")]/img");
+
+            Console.WriteLine("PN: " + productNodes.Count + ", IN: " + imgNodes.Count);
             Uri baseUri = new Uri(url);
 
-            foreach (HtmlNode link in linkNodes)
+
+            Console.WriteLine("Znaleziono: " + productNodes.Count + " produktow");
+
+            for(int i = 0; i < imgNodes.Count; i++)
             {
-                string href = link.Attributes[name: "href"].Value;
-                linkiDoProduktow.Add(new Uri(baseUri, href).AbsoluteUri);
+                string title = productNodes[i].Attributes["data-productname"].Value;
+                string price = productNodes[i].Attributes["data-productminprice"].Value;
+                
+                string imgUrl = imgNodes[i].Attributes["src"].Value;
+                Console.WriteLine(title);
+                Console.WriteLine(price);
+                Console.WriteLine(imgUrl);
+
+                Produkt produkt = new Produkt();
+                produkt.Nazwa = title;
+                /*var ObrazekLink = document.DocumentNode.SelectSingleNode(imgUrlXPath);
+
+                string href = ObrazekLink.Attributes[name: "href"].Value;*/
+
+                /*produkt.Obrazek = href; */
+                /*var fullPrice = float.Parse ((document.DocumentNode.SelectSingleNode(zlpriceXPath).InnerText) + (document.DocumentNode.SelectSingleNode(grpriceXPath).InnerText));
+                produkt.Cena = fullPrice;*/
+                produkty.Add(produkt);
             }
 
-            return linkiDoProduktow;
+            return produkty;
         }
     }
 
