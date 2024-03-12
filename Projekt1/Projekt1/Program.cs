@@ -17,6 +17,7 @@ namespace Projekt1
         static void Main(string[] args)
         {
             List<Produkt> produkty = PobierzSzczegolyProdutkow("https://www.ceneo.pl/Komputery");
+            
             Export(produkty);
         }
 
@@ -82,11 +83,29 @@ namespace Projekt1
             {
                 string title = productNodes[i].Attributes["data-productname"].Value;
                 string price = productNodes[i].Attributes["data-productminprice"].Value;
+
+                //string imgUrl = imgNodes[i].Attributes["src"].Value;
+
+                Console.WriteLine($"https://www.bing.com/images/search?q={title}&form=HDRSC4&first=1");
+                HtmlDocument doc2 = PobierzDokument($"https://www.bing.com/images/search?q={title}&form=HDRSC4&first=1");
+                HtmlNode productNode = doc2.DocumentNode.SelectSingleNode("//div[contains(@class, \"imgpt\")]//a[contains(@class, \"iusc\")]");
+
                 
-                string imgUrl = imgNodes[i].Attributes["src"].Value;
+                string url2 = productNode.Attributes["href"].Value;
+                string cleanUrl = url2.Replace("&amp;", "&");
+                string fullUrl = "www.bing.com/" + cleanUrl;
+
                 Console.WriteLine(title);
                 Console.WriteLine(price);
+                Console.WriteLine(fullUrl);
+
+                HtmlDocument doc3 = PobierzDokument(fullUrl);
+                HtmlNode productNode2 = doc3.DocumentNode.SelectSingleNode("//div[contains(@class, \"mainContainer\")]//img[contains(@class, \"nofocus\")]");
+
+                string imgUrl = productNode2.Attributes["src"].Value;
+
                 Console.WriteLine(imgUrl);
+                Console.WriteLine("_____________________________________________________");
 
                 Produkt produkt = new Produkt();
                 produkt.Nazwa = title;
