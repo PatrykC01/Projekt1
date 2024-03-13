@@ -69,7 +69,7 @@ namespace Projekt1
         {
             
             var replacements = new List<string>
-            { ";", "'", ",", ".", "/", " ", "&", "(", "+", "”"};
+            { ";", "'", ",", ".", "/", " ", "&", "(", "+", "”", "#"};
 
             Dictionary<char, char> polskieZnaki = new Dictionary<char, char>
             {
