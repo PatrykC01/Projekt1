@@ -65,6 +65,65 @@ namespace Projekt1
             return doc;
         }
 
+        static string ZastepowanieZnakowSpecjalnych(string input)
+        {
+            
+            var replacements = new List<string>
+            { ";", "'", ",", ".", "/", " ", "&", "(", "+", "”"};
+
+            Dictionary<char, char> polskieZnaki = new Dictionary<char, char>
+            {
+                { 'ą', 'a' },
+                { 'ć', 'c' },
+                { 'ę', 'e' },
+                { 'ł', 'l' },
+                { 'ń', 'n' },
+                { 'ó', 'o' },
+                { 'ś', 's' },
+                { 'ź', 'z' },
+                { 'ż', 'z' }
+            };
+
+
+            char previousChar = 'a';
+
+            var result = "";
+            
+            foreach (var c in input)
+            {
+                
+                if (replacements.Contains(c.ToString()))
+                {
+                    if (previousChar != '-')
+                    {
+                        result += '-';
+                        previousChar = '-';
+                    }
+                }
+                else
+                {
+                   if(c != ')' && c != '"')
+                    {
+                        if (polskieZnaki.ContainsKey(c))
+
+                            foreach (var x in polskieZnaki)
+                            {
+                                if (x.Key == c)
+                                    result += x.Value;
+                            }
+
+
+                        else if (c.ToString() != "quot")
+                            result += c;
+                        
+                    }
+                    previousChar = c;
+                }
+            }
+            
+            return result;
+        }
+
         static List<Produkt> PobierzSzczegolyProdutkow(string url)
         {
             List<Produkt> produkty = new List<Produkt>();
@@ -82,29 +141,29 @@ namespace Projekt1
             for(int i = 0; i < imgNodes.Count; i++)
             {
                 string title = productNodes[i].Attributes["data-productname"].Value;
+                string datapid = productNodes[i].Attributes["data-pid"].Value;
                 string price = productNodes[i].Attributes["data-productminprice"].Value;
 
                 //string imgUrl = imgNodes[i].Attributes["src"].Value;
 
-                Console.WriteLine($"https://www.bing.com/images/search?q={title}&form=HDRSC4&first=1");
+                /*Console.WriteLine($"https://www.bing.com/images/search?q={title}&form=HDRSC4&first=1");
                 HtmlDocument doc2 = PobierzDokument($"https://www.bing.com/images/search?q={title}&form=HDRSC4&first=1");
-                HtmlNode productNode = doc2.DocumentNode.SelectSingleNode("//div[contains(@class, \"imgpt\")]//a[contains(@class, \"iusc\")]");
-
-                
-                string url2 = productNode.Attributes["href"].Value;
-                string cleanUrl = url2.Replace("&amp;", "&");
-                string fullUrl = "www.bing.com/" + cleanUrl;
+                HtmlNode productNode = doc2.DocumentNode.SelectSingleNode("//div[contains(@class, \"imgpt\")]//a[contains(@class, \"iusc\")]");*/
 
                 Console.WriteLine(title);
+                string cleanName = ZastepowanieZnakowSpecjalnych(title);
+
+                string url2 = "//image.ceneostatic.pl/data/products/" + datapid + "/f-" + cleanName + ".jpg";
+                
+
                 Console.WriteLine(price);
-                Console.WriteLine(fullUrl);
+                Console.WriteLine(url2);
 
-                HtmlDocument doc3 = PobierzDokument(fullUrl);
-                HtmlNode productNode2 = doc3.DocumentNode.SelectSingleNode("//div[contains(@class, \"mainContainer\")]//img[contains(@class, \"nofocus\")]");
+                /*HtmlDocument doc3 = PobierzDokument(fullUrl);
+                HtmlNode productNode2 = doc3.DocumentNode.SelectSingleNode("//div[contains(@class, \"mainContainer\")]//img[contains(@class, \"nofocus\")]");*/
 
-                string imgUrl = productNode2.Attributes["src"].Value;
+                /*string imgUrl = productNode2.Attributes["src"].Value;*/
 
-                Console.WriteLine(imgUrl);
                 Console.WriteLine("_____________________________________________________");
 
                 Produkt produkt = new Produkt();
